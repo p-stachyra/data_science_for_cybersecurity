@@ -1,0 +1,919 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using cosine similarity for commands filtering &#8212; Data Science for Cybersecurity</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Data Science for Cybersecurity</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="index.html">
+   Data Science for Cybersecurity
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_analysis.html">
+   Simple Analysis of Windows Event Viewer Logs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/clustering_cosine.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fclustering_cosine.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cosine-similarity">
+   Cosine similarity
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#global-imports">
+     Global imports
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#local-imports">
+     Local imports
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#some-basic-functions-to-be-used">
+   Some basic functions to be used
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#group-by-lengths">
+   Group by lengths
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-numeric-representation-for-each-group">
+   Get numeric representation for each group
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-cosine-similarity-matrix-for-each-group">
+   Get cosine similarity matrix for each group
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Using cosine similarity for commands filtering</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cosine-similarity">
+   Cosine similarity
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#global-imports">
+     Global imports
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#local-imports">
+     Local imports
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#some-basic-functions-to-be-used">
+   Some basic functions to be used
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#group-by-lengths">
+   Group by lengths
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-numeric-representation-for-each-group">
+   Get numeric representation for each group
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-cosine-similarity-matrix-for-each-group">
+   Get cosine similarity matrix for each group
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="using-cosine-similarity-for-commands-filtering">
+<h1>Using cosine similarity for commands filtering<a class="headerlink" href="#using-cosine-similarity-for-commands-filtering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cosine-similarity">
+<h2>Cosine similarity<a class="headerlink" href="#cosine-similarity" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter I will show how cosine similarity can be used to retrieve similar (or dissimilar) sequences of characters. This technique is widely used in natural language processing (NLP). Cosine similarity can be used for comparing documents, it gives a measure for the angle between vectors of data. <br>
+It is based on the dot product, which is a good operator for yielding high values if two vectors have high values in the same dimensions. Because it favors long vectors, it may be a big disadvantage for the analysis and therefore the outcome must be normalized. The dot product is divided by the lengths of the two vectors being compared[1]. The following formula is used for computing the cosine similarity for two vectors (v and w):</p>
+<div class="math notranslate nohighlight">
+\[cosine(v, w) = \frac{v \cdot w}{\lVert v \rVert \lVert w \rVert} = \frac{\sum^{N}_{i=1}v_{i}w_{i}}{\sum^{N}_{i=1}v_{i}^2 \sum^{N}_{i=1}w_{i}^2}\]</div>
+<p>Cosine similarity can be thought as an angle between two vectors being compared. In fact, after computing cosine distance, we can use arc-cosine function to translate it directly into an angle, so that the values are in the range of 0-180 degrees. Two vectors with the same direction have cosine similarity equal to 0. Symmetry is quite an obvious characteristic of the cosine similarity, since there will be the same distance from v to w and from w to v [2].</p>
+<div class="section" id="global-imports">
+<h3>Global imports<a class="headerlink" href="#global-imports" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">cosine_similarity</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="local-imports">
+<h3>Local imports<a class="headerlink" href="#local-imports" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.data_cleaning.datasetBuilder</span> <span class="kn">import</span> <span class="n">DatasetBuilder</span>
+<span class="kn">from</span> <span class="nn">src.data_cleaning.datasetCleaner</span> <span class="kn">import</span> <span class="n">DatasetCleaner</span>
+<span class="kn">from</span> <span class="nn">src.time_analysis.timeStepPreprocessor</span> <span class="kn">import</span> <span class="n">TimeStepPreprocessor</span>
+</pre></div>
+</div>
+<p>First, the data set is cleaned an the time attribute is split into the time and date.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">DatasetBuilder</span><span class="p">(</span><span class="s2">&quot;src/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">buildDataset</span><span class="p">()</span>
+<span class="n">tsp</span> <span class="o">=</span> <span class="n">TimeStepPreprocessor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;TimeCreated&quot;</span><span class="p">)</span>
+<span class="n">tsp</span><span class="o">.</span><span class="n">preprocessTimeSteps</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">tsp</span><span class="o">.</span><span class="n">preprocessed_date_time</span>
+<span class="n">cleaner</span> <span class="o">=</span> <span class="n">DatasetCleaner</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Message&quot;</span><span class="p">)</span>
+<span class="n">cleaned_data</span> <span class="o">=</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">removeNullValues</span><span class="p">(</span><span class="n">generate_report</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The most interesting attribute for this analysis is the <em>Message</em> attribute, since it contains the log messages we try to filter. In NLP the entire set of documents is called a corpus, thus this will be the variable to hold the messages’ contents.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now, there are a few steps to complete before proceeding with cosine similarity computation. <br></p>
+<ol class="simple">
+<li><p>The messages lengths must be obtained. <br></p></li>
+<li><p>Based on their lengths, they must be grouped according to length intervals. <br></p></li>
+<li><p>The messages’ characters must be represented in a numeric format and the differences in lengths among messages belonging to the same group must be eliminated by adding additional zeros to the vectors. Therefore, the lengths of messages in each group will correspond to the length of the longest message in that group.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="some-basic-functions-to-be-used">
+<h2>Some basic functions to be used<a class="headerlink" href="#some-basic-functions-to-be-used" title="Permalink to this headline">¶</a></h2>
+<p>The first important function takes an array of texts, converts it into a Pandas Series and assigns lengths of the messages to the new attribute. The output of this function is a dataframe containing the message’s length and its contents stored in another attribute.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getLengths</span><span class="p">(</span><span class="n">list_texts</span><span class="p">):</span>
+    <span class="n">series_text</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">list_texts</span><span class="p">)</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="n">series_text</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+    <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MessageLength&quot;</span><span class="p">]</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">])</span>
+    <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MessageLength&quot;</span><span class="p">]</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Text</span><span class="o">=</span><span class="n">series_text</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">dataframe</span>
+</pre></div>
+</div>
+<p>Another function searches for the message of the greatest length.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getMaxLength</span><span class="p">(</span><span class="n">series_text</span><span class="p">):</span>
+    <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">series_text</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">len</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">:</span>
+            <span class="n">max_len</span> <span class="o">=</span> <span class="n">l</span>
+    <span class="k">return</span> <span class="n">max_len</span>
+</pre></div>
+</div>
+<p>The function convertToNumeric takes a message and converts characters to numbers. It is done using ord() function, which returns Unicode for a character. <br>
+Another argument it takes is the maximum length, so it can compute the difference between the message’s length and the max length and appends zeros to the vector of numbers representing the message. <br>
+The function returns a list of numbers which represent the message as a numeric vector.</p>
+<p>The reason why the vectors are obtained this way - using the characters’ Unicode representation, is the fact that system commands and system logs are a very specific kind of language. Some signatures or commands flags can differ by a single letter, so if we have two vectors of system commands differing only by some flags given, such a difference will be few numbers. This is an alternative technique for word-oriented techniques - such as BoW or TF-IDF. Therefore, we can measure the difference at individual characters level for sequences of characters, rather than measuring the occurrences of words in each text for instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convertToNumeric</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="p">):</span>
+    <span class="n">numeric_representation</span> <span class="o">=</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">numeric_representation</span><span class="p">)</span> <span class="o">-</span> <span class="n">max_length</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">diff</span><span class="p">):</span>
+        <span class="n">numeric_representation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numeric_representation</span>
+</pre></div>
+</div>
+<p>The function constructNumericRepresentation is a helper function which applies the getMaxLength and convertToNumeric functions to a Series of texts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">constructNumericRepresentation</span><span class="p">(</span><span class="n">messages_series</span><span class="p">):</span>
+    <span class="n">numerical_arrays</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">max_len</span> <span class="o">=</span> <span class="n">getMaxLength</span><span class="p">(</span><span class="n">messages_series</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">messages_series</span><span class="p">:</span>
+        <span class="n">numerical_arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convertToNumeric</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_len</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">numerical_arrays</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="group-by-lengths">
+<h2>Group by lengths<a class="headerlink" href="#group-by-lengths" title="Permalink to this headline">¶</a></h2>
+<p>So the first task is to group messages according to length intervals.</p>
+<p>The function getLowerBounds is a helper function which establishes the lower limits for the intervals in the context of the entire dataset. It runs from the message of the smallest length, makes a step equal to the width of an interval - provided as the function’s argument and stops as soon as it reaches the value of the maximum length + the interval’s width.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getLowerBounds</span><span class="p">(</span><span class="n">text_series</span><span class="p">,</span> <span class="n">interval_width</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># prepare a list of lower bound values for grouping messages according to their length category.</span>
+    <span class="c1"># the groups will be 10 characters wide.</span>
+    <span class="n">df_temp</span> <span class="o">=</span> <span class="n">getLengths</span><span class="p">(</span><span class="n">text_series</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[</span><span class="s2">&quot;MessageLength&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">interval_width</span>
+    <span class="n">stop</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[</span><span class="s2">&quot;MessageLength&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">interval_width</span>
+    <span class="n">lower_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">lower_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lower_bounds</span>
+</pre></div>
+</div>
+<p>The function assignToGroups takes the messages as the input and the interval’s width as a named argument (keyword argument) which by default is set to 10. It can be optimized according to the needs. The function executes in quadratic time complexity (<span class="math notranslate nohighlight">\(O^{2}\)</span>), however, it only appends to a list of groups based on a condition given.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">assignToGroups</span><span class="p">(</span><span class="n">text_series</span><span class="p">,</span> <span class="n">interval_width</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># assign the messages to groups</span>
+    <span class="n">df_temp</span> <span class="o">=</span> <span class="n">getLengths</span><span class="p">(</span><span class="n">text_series</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="n">lower_bounds</span> <span class="o">=</span> <span class="n">getLowerBounds</span><span class="p">(</span><span class="n">text_series</span><span class="p">,</span> <span class="n">interval_width</span><span class="p">)</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lower_bounds</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_temp</span><span class="p">)):</span>
+            <span class="c1"># if a message is in range in terms of its length, add it.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">df_temp</span><span class="o">.</span><span class="n">MessageLength</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lower_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_temp</span><span class="o">.</span><span class="n">MessageLength</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lower_bounds</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_temp</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="c1"># append the group of messages to the global group of groups</span>
+        <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">groups</span>
+</pre></div>
+</div>
+<p>It is import to extract groups which are non-empty, as some groups may contain no records. This is because the messages did not meet the criteria of belonging to a group - they were too short or too long.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extractNonEmptyGroups</span><span class="p">(</span><span class="n">groups</span><span class="p">):</span>
+    <span class="n">non_empty_groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+            <span class="n">non_empty_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">non_empty_groups</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">non_empty_groups</span> <span class="o">=</span> <span class="n">extractNonEmptyGroups</span><span class="p">(</span><span class="n">assignToGroups</span><span class="p">(</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">],</span> <span class="n">interval_width</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">non_empty_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>125
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-numeric-representation-for-each-group">
+<h2>Get numeric representation for each group<a class="headerlink" href="#get-numeric-representation-for-each-group" title="Permalink to this headline">¶</a></h2>
+<p>Once we have groups which are non-empty lists, we can obtain the numeric representation of the messages for each group. Splitting the process into grouping texts and retrieving their numeric representations allows for mapping the numeric groups to the text groups.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">createNumericGroups</span><span class="p">(</span><span class="n">groups_not_empty</span><span class="p">):</span>
+    <span class="n">numeric_groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups_not_empty</span><span class="p">:</span>
+        <span class="n">numeric_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constructNumericRepresentation</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">numeric_groups</span>
+</pre></div>
+</div>
+<p>Since the function createNumericGroups executes in quadratic time complexity (<span class="math notranslate nohighlight">\(O^{2}\)</span>) due to a nested loop resulting in applying the constructNumericRepresentation function in a for loop, this is another bottleneck for the program.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">numeric_groups</span> <span class="o">=</span> <span class="n">createNumericGroups</span><span class="p">(</span><span class="n">non_empty_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>125
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-cosine-similarity-matrix-for-each-group">
+<h2>Get cosine similarity matrix for each group<a class="headerlink" href="#get-cosine-similarity-matrix-for-each-group" title="Permalink to this headline">¶</a></h2>
+<p>The final step is to compute the cosine similarity for vectors of numeric representation of characters and select the most representative and the least representative ones within each group.</p>
+<p>The following function computes a pairwise cosine similarity for groups of messages. The scores are returned in a form of a matrix and for each message an average similarity is calculated so that the message with the highest and the lowest score can be selected for each group. A list of tuples is retrurned and each tuple contains information about the message’s index, the most representative message and the least representative message.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">findRepresentativeMessages</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">,</span> <span class="n">literal_groups</span><span class="p">):</span>
+    <span class="c1"># the arrays must be the same size, otherwise retrieval of the literal message would not be possible</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">literal_groups</span><span class="p">),</span> <span class="s2">&quot;Arrays of unequal length!&quot;</span>
+    <span class="n">representative_messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">)):</span>
+        <span class="c1"># in case that there is only a single message in the group, append it as it is the</span>
+        <span class="c1"># only representation of the group</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">literal_groups</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">representative_messages</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">literal_groups</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="c1"># otherwise, determine the cosine similarity scores for the messages</span>
+        <span class="c1"># and get the most representative and the least representative ones</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># obtain cosine similarity matrix</span>
+            <span class="n">cosine_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="c1"># get the scores of similarity to other commands</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">((</span><span class="n">cosine_df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cosine_df</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="c1"># There should be no error, as the groups of just 1 element have been filtered</span>
+            <span class="c1"># however, if there is still an error, continue.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()))</span> <span class="o">|</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">idxmin</span><span class="p">())):</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># return the most representative and least representative commands for that group</span>
+                <span class="n">representative_messages</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">literal_groups</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">scores</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()],</span> <span class="n">literal_groups</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">scores</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()]))</span>
+
+    <span class="k">return</span> <span class="n">representative_messages</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_messages</span> <span class="o">=</span> <span class="n">findRepresentativeMessages</span><span class="p">(</span><span class="n">numeric_groups</span><span class="p">,</span> <span class="n">non_empty_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A helper function can be created to save the results in a text file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">saveExtractedMessages</span><span class="p">(</span><span class="n">extracted_messages</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">):</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_directory</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">output_directory</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">/most_representative_messages.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">extracted_messages</span><span class="p">:</span>
+                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">RECORD: </span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">/least_representative_messages.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">extracted_messages</span><span class="p">:</span>
+                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">RECORD: </span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">%s</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Saving messages failed.&quot;</span> <span class="o">%</span> <span class="n">ex</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">status</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">saveExtractedMessages</span><span class="p">(</span><span class="n">filtered_messages</span><span class="p">,</span> <span class="s2">&quot;filtered_messages&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0
+</pre></div>
+</div>
+<p>Having the outputs saved to a text file, we can filter through interesting messages on the initial dataframe and explore event information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">44238</span><span class="p">,</span> <span class="mi">44267</span><span class="p">,</span> <span class="mi">44273</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Message</th>
+      <th>Id</th>
+      <th>Version</th>
+      <th>Qualifiers</th>
+      <th>Level</th>
+      <th>Task</th>
+      <th>Opcode</th>
+      <th>Keywords</th>
+      <th>RecordId</th>
+      <th>ProviderName</th>
+      <th>...</th>
+      <th>ContainerLog</th>
+      <th>MatchedQueryIds</th>
+      <th>Bookmark</th>
+      <th>LevelDisplayName</th>
+      <th>OpcodeDisplayName</th>
+      <th>TaskDisplayName</th>
+      <th>KeywordsDisplayNames</th>
+      <th>Properties</th>
+      <th>Date</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>44238</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>61</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>23/10/2020</td>
+      <td>11:55:26</td>
+    </tr>
+    <tr>
+      <th>44267</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>32</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>22/10/2020</td>
+      <td>15:38:59</td>
+    </tr>
+    <tr>
+      <th>44273</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>26</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>22/10/2020</td>
+      <td>15:30:56</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 28 columns</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">44238</span><span class="p">,</span> <span class="mi">44267</span><span class="p">,</span> <span class="mi">44273</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Message</th>
+      <th>Id</th>
+      <th>Version</th>
+      <th>Qualifiers</th>
+      <th>Level</th>
+      <th>Task</th>
+      <th>Opcode</th>
+      <th>Keywords</th>
+      <th>RecordId</th>
+      <th>ProviderName</th>
+      <th>...</th>
+      <th>ContainerLog</th>
+      <th>MatchedQueryIds</th>
+      <th>Bookmark</th>
+      <th>LevelDisplayName</th>
+      <th>OpcodeDisplayName</th>
+      <th>TaskDisplayName</th>
+      <th>KeywordsDisplayNames</th>
+      <th>Properties</th>
+      <th>Date</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>44238</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>61</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>23/10/2020</td>
+      <td>11:55:26</td>
+    </tr>
+    <tr>
+      <th>44267</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>32</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>22/10/2020</td>
+      <td>15:38:59</td>
+    </tr>
+    <tr>
+      <th>44273</th>
+      <td>A Terminal Services session change was process...</td>
+      <td>1006</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>-9223372036854775776</td>
+      <td>26</td>
+      <td>Microsoft-Windows-Wcmsvc</td>
+      <td>...</td>
+      <td>c:\users\hyphens\hackthebox\event_horizon\proj...</td>
+      <td>System.UInt32[]</td>
+      <td>System.Diagnostics.Eventing.Reader.EventBookmark</td>
+      <td>Information</td>
+      <td>Info</td>
+      <td>NaN</td>
+      <td>System.Collections.ObjectModel.ReadOnlyCollect...</td>
+      <td>System.Collections.Generic.List`1[System.Diagn...</td>
+      <td>22/10/2020</td>
+      <td>15:30:56</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 28 columns</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">33632</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Message                 An account was logged off.\r\n\r\nSubject:\r\n...
+Id                                                                   4634
+Version                                                               0.0
+Qualifiers                                                            NaN
+Level                                                                   0
+Task                                                                12545
+Opcode                                                                0.0
+Keywords                                             -9214364837600034816
+RecordId                                                              509
+ProviderName                          Microsoft-Windows-Security-Auditing
+ProviderId                           54849625-5478-4994-a5ba-3e3b0328c30d
+LogName                                                          Security
+ProcessId                                                           824.0
+ThreadId                                                           4960.0
+MachineName                                               WIN-PTFPHFCRDJ0
+UserId                                                                NaN
+ActivityId                                                            NaN
+RelatedActivityId                                                     NaN
+ContainerLog            c:\users\hyphens\hackthebox\event_horizon\proj...
+MatchedQueryIds                                           System.UInt32[]
+Bookmark                 System.Diagnostics.Eventing.Reader.EventBookmark
+LevelDisplayName                                              Information
+OpcodeDisplayName                                                    Info
+TaskDisplayName                                                    Logoff
+KeywordsDisplayNames    System.Collections.ObjectModel.ReadOnlyCollect...
+Properties              System.Collections.Generic.List`1[System.Diagn...
+Date                                                           22/10/2020
+Time                                                             15:30:58
+Name: 33632, dtype: object
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">33641</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Message                 An account was successfully logged on.\r\n\r\n...
+Id                                                                   4624
+Version                                                               2.0
+Qualifiers                                                            NaN
+Level                                                                   0
+Task                                                                12544
+Opcode                                                                0.0
+Keywords                                             -9214364837600034816
+RecordId                                                              500
+ProviderName                          Microsoft-Windows-Security-Auditing
+ProviderId                           54849625-5478-4994-a5ba-3e3b0328c30d
+LogName                                                          Security
+ProcessId                                                           824.0
+ThreadId                                                            876.0
+MachineName                                               WIN-PTFPHFCRDJ0
+UserId                                                                NaN
+ActivityId                           eae887f7-a8b5-0000-7c8b-e8eab5a8d601
+RelatedActivityId                                                     NaN
+ContainerLog            c:\users\hyphens\hackthebox\event_horizon\proj...
+MatchedQueryIds                                           System.UInt32[]
+Bookmark                 System.Diagnostics.Eventing.Reader.EventBookmark
+LevelDisplayName                                              Information
+OpcodeDisplayName                                                    Info
+TaskDisplayName                                                     Logon
+KeywordsDisplayNames    System.Collections.ObjectModel.ReadOnlyCollect...
+Properties              System.Collections.Generic.List`1[System.Diagn...
+Date                                                           22/10/2020
+Time                                                             15:30:54
+Name: 33641, dtype: object
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">Id</span> <span class="o">==</span> <span class="mi">4624</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Date        Time    
+22/10/2020  13:57:19    9
+            13:57:20    6
+            15:38:57    5
+            13:52:08    4
+            13:52:05    3
+                       ..
+26/10/2020  19:08:16    1
+            19:17:20    1
+            19:23:13    1
+            19:38:32    1
+            19:39:05    1
+Name: Time, Length: 227, dtype: int64
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>[1] Jurafsky D., Martin J. H. (2020). Speech and Language Processing An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. Retrieved from <a class="reference external" href="https://web.stanford.edu/~jurafsky/slp3/">https://web.stanford.edu/~jurafsky/slp3/</a> on 3 June 2022. <br></p>
+<p>[2] Leskovec J., Rajaraman A., Ulman J. D. (2019). Mining of Massive Datasets. Retrieved from <a class="reference external" href="http://www.mmds.org/">http://www.mmds.org/</a> on 3 June 2021.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Piotr Stachyra<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

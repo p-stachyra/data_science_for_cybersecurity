@@ -4,13 +4,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simple Analysis of Windows Event Viewer Logs &#8212; Data Science for Cybersecurity</title>
     
-  <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -20,16 +18,20 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
+    
+      
+
+    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -37,13 +39,12 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -60,21 +61,7 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
-
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -83,10 +70,9 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -104,15 +90,14 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="index.html">
-                    Data Science for Cybersecurity
-                </a>
-            </li>
-        </ul>
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="index.html">
+   Data Science for Cybersecurity
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Simple Analysis of Windows Event Viewer Logs
@@ -121,17 +106,12 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
-    </div>
-    <div id="rtd-footer-container"></div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
 </div>
 
 
@@ -139,162 +119,77 @@ const thebe_selector_output = ".output, .cell_output"
 
 
           
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
     
-    <div class="header-article row sticky-top noprint">
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
         
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/executablebooks/jupyter-book"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsimple_analysis.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/simple_analysis.md"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.md</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/simple_analysis.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
 </div>
 
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsimple_analysis.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
     </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#introduction">
    Introduction
@@ -367,11 +262,12 @@ title="Print to PDF"
  </li>
 </ul>
 
-    </nav>
-</div>
+            </nav>
+        </div>
     </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Simple Analysis of Windows Event Viewer Logs</h1>
@@ -460,19 +356,18 @@ title="Print to PDF"
                     </div>
                 </div>
             </div>
-            <main id="main-content" role="main">
-                
+            
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="simple-analysis-of-windows-event-viewer-logs">
-<h1>Simple Analysis of Windows Event Viewer Logs<a class="headerlink" href="#simple-analysis-of-windows-event-viewer-logs" title="Permalink to this headline">#</a></h1>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+  <div class="tex2jax_ignore mathjax_ignore section" id="simple-analysis-of-windows-event-viewer-logs">
+<h1>Simple Analysis of Windows Event Viewer Logs<a class="headerlink" href="#simple-analysis-of-windows-event-viewer-logs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This analysis is based on the concept of executing specific queries to filter and access particular data. This is why I call it simple, however, good querying skills can be powerful and advanced tool. It relies on the information which has been already given: the attackers compromised the machine, they attempted to clean the evidence of their activity perhaps some trace is hidden in events related to PowerShell.</p>
 <p>The task is a part of a challenge <em>Event Horizon</em> on Hack The Box platform (<a class="reference external" href="http://hackthebox.com">hackthebox.com</a>).</p>
-</section>
-<section id="packages">
-<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="packages">
+<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
 <p>From the standard set of libraries, we will need the following packages:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -489,9 +384,9 @@ title="Print to PDF"
 <span class="kn">from</span> <span class="nn">src.time_analysis.timeStepPreprocessor</span> <span class="kn">import</span> <span class="n">TimeStepPreprocessor</span>
 </pre></div>
 </div>
-</section>
-<section id="preprocessing">
-<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h2>
 <p>First, the dataset is assembled from seperate CSV files representing each log file. They contain data on the events related to different services such as <em>Windows File Recovery</em>, <em>Windows App Container</em>, etc. <br>
 After the complete dataset is constructed, the time stamp is split into 2 attributes - one for the date and the other for the time. This allows for grouping the events in an easier way, without calling <strong>datetime</strong> class methods in order to group by date or hour within a single timestamp attribute. <br>
 Finally, when the timestamp information is represented in a more convenient format, the dataset must be prepared for the analysis of details related to each event: all records containing missing values in the <em>Message</em> attribute are discarded. This is because neither would it be possible to work on missing values, nor to perform an accurate imputation based on other variables in a row.</p>
@@ -514,9 +409,9 @@ Finally, when the timestamp information is represented in a more convenient form
 </pre></div>
 </div>
 <p>After cleaning the dataset, we will be working with approximately one-third of the original number of records.</p>
-</section>
-<section id="understanding-the-dataset">
-<h2>Understanding the dataset<a class="headerlink" href="#understanding-the-dataset" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="understanding-the-dataset">
+<h2>Understanding the dataset<a class="headerlink" href="#understanding-the-dataset" title="Permalink to this headline">¶</a></h2>
 <p>As a part of data understanding let us study the attributes and their values.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
     <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -626,9 +521,9 @@ VSS
 </pre></div>
 </div>
 <p>Among these categories there should be some related to PowerShell, we can check which of them contain a substring “power”. To do this, let’s iterate over the unique values again, but this time a conditional statement is added to check if “power” is contained within each of String values of the list. If it is, we print out these values. We get four Strings which match the criterion and we find the most probable one: <em>Microsoft-Windows-PowerShell</em>. We can assume that records with this categorical value in the <em>ProviderName</em> attribute will be relevant for the analysis.</p>
-</section>
-<section id="defining-the-subset-of-interest">
-<h2>Defining the subset of interest<a class="headerlink" href="#defining-the-subset-of-interest" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="defining-the-subset-of-interest">
+<h2>Defining the subset of interest<a class="headerlink" href="#defining-the-subset-of-interest" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">provider</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
     <span class="k">if</span> <span class="s2">&quot;power&quot;</span> <span class="ow">in</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
@@ -765,9 +660,9 @@ This is a clear trace of the attackers trying to capture plaintext credentials o
 </table>
 </div>
 <p>There are 4 unique categories with the major one of “Execute a Remote Command” String value.</p>
-</section>
-<section id="planning-the-analysis-of-the-malicious-events">
-<h2>Planning the analysis of the malicious events<a class="headerlink" href="#planning-the-analysis-of-the-malicious-events" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="planning-the-analysis-of-the-malicious-events">
+<h2>Planning the analysis of the malicious events<a class="headerlink" href="#planning-the-analysis-of-the-malicious-events" title="Permalink to this headline">¶</a></h2>
 <p>Now, because apparently some scripts loaded in memory triggered AV response and got blocked, they will be studied first. The unique characteristic of these messages is that execution of that script produced an error with a specific description: “This script contains malicious content and has been blocked by your antivirus software.”. <br>
 For these messages we want to know: <br></p>
 <ol class="simple">
@@ -779,9 +674,9 @@ For these messages we want to know: <br></p>
 <li><p>What is the time and date of these blocked actions <br>
 These answers will allow for obtaining a wider view regarding the failed actions.</p></li>
 </ol>
-</section>
-<section id="the-analysis-of-the-activity-which-was-blocked-or-failed">
-<h2>The analysis of the activity which was blocked or failed<a class="headerlink" href="#the-analysis-of-the-activity-which-was-blocked-or-failed" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="the-analysis-of-the-activity-which-was-blocked-or-failed">
+<h2>The analysis of the activity which was blocked or failed<a class="headerlink" href="#the-analysis-of-the-activity-which-was-blocked-or-failed" title="Permalink to this headline">¶</a></h2>
 <p>First, we want to obtain a corpus of the blocked messages. Although, not to narrow down the search too much, first all scripts which produced an error will be extracted.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">failed_scripts</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">][</span><span class="s2">&quot;Message&quot;</span><span class="p">]:</span>
@@ -806,9 +701,9 @@ Length of the corpus of messages related to scripts which were blocked by the AV
 </div>
 <p>It is quite clear that not all scripts resulted in an error due to the AV reaction alone, therefore, it may be interesting to scrutinize this aspect. Nevertheless, logically, all scripts that produced an error - including those which got blocked - failed at finishing their task, thus they can be treated as a separate branch of this analysis. The questions we may ask is why they failed and what was their purpose. To answer these questions, a list of points enumerated above should be applied. <br>
 Still, it might be valuable to obtain a general overview of what are these messages. These lists already contain unique messages.</p>
-</section>
-<section id="an-overview-of-the-activity-which-failed">
-<h2>An overview of the activity which failed<a class="headerlink" href="#an-overview-of-the-activity-which-failed" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="an-overview-of-the-activity-which-failed">
+<h2>An overview of the activity which failed<a class="headerlink" href="#an-overview-of-the-activity-which-failed" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;simple_analysis_reports/2_failed_scripts_contents_overview.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">failed_scripts</span><span class="p">:</span>
         <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -911,9 +806,9 @@ The number of scripts which were blocked: 4
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(9,)
 </pre></div>
 </div>
-</section>
-<section id="assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description">
-<h2>Assigning additional attributes: user account, URLs, malicious function’s name and its description<a class="headerlink" href="#assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description">
+<h2>Assigning additional attributes: user account, URLs, malicious function’s name and its description<a class="headerlink" href="#assigning-additional-attributes-user-account-urls-malicious-function-s-name-and-its-description" title="Permalink to this headline">¶</a></h2>
 <p>Now, we will work on this subset in greater detail, therefore, it will be deep-copied to another variable. Deep copy is a copy of values and not of the reference of the array object. Producing such a copy ensures that operating on this subset will not produce changes to the original subset, however, some may say that this is unnecessary as we are working with a copy of this subset anyway, automatically, it is better to have this kind of habit not to be surprised one day.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powershell_df</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">ProviderName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-PowerShell&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">powershell_df</span> <span class="o">=</span> <span class="n">powershell_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">failed</span><span class="o">=</span><span class="n">failed</span><span class="p">)</span>
@@ -1005,9 +900,9 @@ Different formatting. The URL is a part of comments. Message ID: 101
 </pre></div>
 </div>
 <p>Having such a rich, preprocessed dataset, we can answer the questions regarding the actions which failed, as well as those which succeeded.</p>
-</section>
-<section id="malicious-activity-which-got-blocked-or-failed-an-overview">
-<h2>Malicious activity which got blocked or failed: an overview<a class="headerlink" href="#malicious-activity-which-got-blocked-or-failed-an-overview" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="malicious-activity-which-got-blocked-or-failed-an-overview">
+<h2>Malicious activity which got blocked or failed: an overview<a class="headerlink" href="#malicious-activity-which-got-blocked-or-failed-an-overview" title="Permalink to this headline">¶</a></h2>
 <p>Having all new attributes required for the further analysis, we can generate a report on the failed activities.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) How many were blocked&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
@@ -1179,9 +1074,9 @@ User Data:
 </pre></div>
 </div>
 <p>The events suggest that these were successful attempts to download text files, bypassing the execution policy for PowerShell (-ep bypass). Unfortunately, the repository is not found and the investigation based on the assumption that this text file might still exist somewhere on the Internet did not reveal any particular details which could lead to further information on this file.</p>
-</section>
-<section id="successful-malicious-activity">
-<h2>Successful malicious activity<a class="headerlink" href="#successful-malicious-activity" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="successful-malicious-activity">
+<h2>Successful malicious activity<a class="headerlink" href="#successful-malicious-activity" title="Permalink to this headline">¶</a></h2>
 <p>Now, let us focus on the successful actions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1) How many were successful&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">powershell_df</span><span class="o">.</span><span class="n">failed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1425,9 +1320,9 @@ Name: Time, dtype: int64
         <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="activity-visualization">
-<h2>Activity visualization<a class="headerlink" href="#activity-visualization" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="activity-visualization">
+<h2>Activity visualization<a class="headerlink" href="#activity-visualization" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least, we can visualize the activity of the PowerShell actions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">powershell_df</span><span class="p">[[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">timesteps</span> <span class="o">=</span> <span class="n">timeseries_df</span><span class="p">[[</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -1446,9 +1341,9 @@ Name: Time, dtype: int64
 </pre></div>
 </div>
 <p><img alt="png" src="_images/output_95_0.png" /></p>
-</section>
-<section id="usage-of-services-during-the-time-of-the-malicious-activity">
-<h2>Usage of services during the time of the malicious activity<a class="headerlink" href="#usage-of-services-during-the-time-of-the-malicious-activity" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="usage-of-services-during-the-time-of-the-malicious-activity">
+<h2>Usage of services during the time of the malicious activity<a class="headerlink" href="#usage-of-services-during-the-time-of-the-malicious-activity" title="Permalink to this headline">¶</a></h2>
 <p>Additionally, from the <em>LogName</em> attribute, we can retrieve information about the services used during an event occurrence. One of the value indicates that rows containing it may be related to a remote activity.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tmp</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">LogName</span> <span class="o">==</span> <span class="s2">&quot;Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
@@ -1489,9 +1384,9 @@ Domain:
 Source Network Address: 22.22.22.136 
 </pre></div>
 </div>
-</section>
-<section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">#</a></h2>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
 <p>As seen in the report, the attackers executed 19 functions allowing for gathering credentials, elevating privileges and changing configurations.
 There were 140 successful operations, executed in the context of <em>user</em> user on the <em>WIN-PTFPHFCRDJ0</em> device.</p>
 <p>The URLs present in these messages suggest that some resources hosted by the attackers were accessed by scripts, however, some URLs seem like references for functions descriptions. The resources accessed by scripts are possibly:</p>
@@ -1556,8 +1451,8 @@ The temporal activity indicates that priviledge escalation was performed on the 
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0.927%
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {
@@ -1581,11 +1476,9 @@ The temporal activity indicates that priviledge escalation was performed on the 
 
               </div>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
     <a class='left-prev' id="prev-link" href="index.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1594,28 +1487,24 @@ The temporal activity indicates that priviledge escalation was performed on the 
         </div>
     </a>
 </div>
-            </footer>
+            
         </div>
     </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Piotr Stachyra<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
+    <footer class="footer">
+  <p>
     
-</div>
+      By Piotr Stachyra<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
 
 
       </div>
     </div>
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
-
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
 
   </body>
 </html>
