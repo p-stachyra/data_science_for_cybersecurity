@@ -5,3 +5,4 @@ format: jb-book
 root: index
 chapters:
 - file: simple_analysis
+- file: clustering_cosine
